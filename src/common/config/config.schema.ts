@@ -53,6 +53,6 @@ export const configSchema = convict<ConfigSchema>({
     doc: 'Database name (MongoDB)',
     format: String,
     env: 'DB_NAME',
-    default: 'course-nodejs-restapi'
+    default: 'coursework-db'
   }
 });

@@ -16,14 +16,14 @@ export default class ConfigService implements ConfigInterface {
     const parsedOutput = config();
 
     if (parsedOutput.error) {
-      throw new Error('Не удалось прочесть .env файл. Возможно, файл не существует.');
+      throw new Error('Can not read .env file. May be it does not exist.');
     }
 
     configSchema.load({});
     configSchema.validate({allowed: 'strict', output: this.logger.info});
 
     this.config = configSchema.getProperties();
-    this.logger.info('.env file was found and successfully parsed.');
+    this.logger.info('.env was found and parsed.');
   }
 
   public get<T extends keyof ConfigSchema>(key: T) {
