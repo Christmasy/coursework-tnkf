@@ -3,15 +3,15 @@ import { DocumentType } from '@typegoose/typegoose/lib/types.js';
 import CreateUserDto from './dto/create-user.dto.js';
 import { UserServiceInterface } from './user-service.interface.js';
 import { inject, injectable } from 'inversify';
-import { Component } from '../../types/component.type.js';
+import { COMPONENT } from '../../types/component.type.js';
 import { LoggerInterface } from '../../common/logger/logger.interface.js';
 import {types} from '@typegoose/typegoose';
 
 @injectable()
 export default class UserService implements UserServiceInterface {
   constructor(
-    @inject(Component.LoggerInterface) private logger: LoggerInterface,
-    @inject(Component.UserModel) private readonly userModel: types.ModelType<UserEntity>
+    @inject(COMPONENT.LoggerInterface) private logger: LoggerInterface,
+    @inject(COMPONENT.UserModel) private readonly userModel: types.ModelType<UserEntity>
   ) {}
 
   public async create(

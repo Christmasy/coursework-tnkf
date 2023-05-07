@@ -2,16 +2,16 @@ import 'reflect-metadata';
 import { inject, injectable } from 'inversify';
 import { LoggerInterface } from '../common/logger/logger.interface.js';
 import { ConfigInterface } from '../common/config/config.interface.js';
-import { Component } from '../types/component.type.js';
+import { COMPONENT } from '../types/component.type.js';
 import { getURI } from '../utils/db.js';
 import { DatabaseInterface } from '../common/database-client/database.interface.js';
 
 @injectable()
 export default class Application {
   constructor(
-    @inject(Component.LoggerInterface) private logger: LoggerInterface,
-    @inject(Component.ConfigInterface) private config: ConfigInterface,
-    @inject(Component.DatabaseInterface)
+    @inject(COMPONENT.LoggerInterface) private logger: LoggerInterface,
+    @inject(COMPONENT.ConfigInterface) private config: ConfigInterface,
+    @inject(COMPONENT.DatabaseInterface)
     private databaseClient: DatabaseInterface
   ) {}
 

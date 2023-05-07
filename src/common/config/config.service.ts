@@ -3,14 +3,14 @@ import {inject, injectable} from 'inversify';
 import {ConfigInterface} from './config.interface.js';
 import {LoggerInterface} from '../logger/logger.interface.js';
 import {configSchema, ConfigSchema} from './config.schema.js';
-import {Component} from '../../types/component.type.js';
+import {COMPONENT} from '../../types/component.type.js';
 
 @injectable()
 export default class ConfigService implements ConfigInterface {
   private readonly config: ConfigSchema;
   private logger: LoggerInterface;
 
-  constructor(@inject(Component.LoggerInterface) logger: LoggerInterface) {
+  constructor(@inject(COMPONENT.LoggerInterface) logger: LoggerInterface) {
     this.logger = logger;
 
     const parsedOutput = config();
