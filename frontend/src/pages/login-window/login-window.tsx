@@ -5,26 +5,19 @@ import {
   Button,
   AppBar,
   Toolbar,
+  Snackbar,
 } from '@material-ui/core';
-import { useStyles } from './registration-window-styles';
-import { login } from '../../utils/login';
-import { NavigateFunction, useNavigate } from 'react-router-dom';
+import { useStyles } from './login-window-styles';
 import { appContext } from '../../components/app-context/app-context';
+import { NavigateFunction, useNavigate } from 'react-router-dom';
+import { Alert } from '@mui/material';
+import { login } from '../../utils/login';
 
-async function reg(
-  email: string,
-  password: string,
-  setNewState: (token: string) => void,
-  navigate: NavigateFunction
-){
-  await fetch('/api/reg', {method:'POST', body:JSON.stringify({username:email, password, email}), headers:{'Content-Type':'application/json'}});
-  await login(email, password, setNewState, navigate, () => {});
-}
-
-function RegistrationWindow() {
+function LoginWindow() {
   const classes = useStyles();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [hasError, setError] = useState(false);
 
   const {setNewState} = useContext(appContext) as any;
   const navigate = useNavigate();
@@ -34,7 +27,7 @@ function RegistrationWindow() {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
-            Регистрация
+            Вход
           </Typography>
         </Toolbar>
       </AppBar>
@@ -61,13 +54,18 @@ function RegistrationWindow() {
           variant="contained"
           color="primary"
           className={classes.button}
-          onClick={() => reg(email, password, setNewState, navigate)}
+          onClick={() => login(email, password, setNewState, navigate, setError)}
         >
-          Зарегистрироваться
+          Войти
         </Button>
+        <Snackbar open={hasError} autoHideDuration={6000} onClose={() => setError(false)}>
+          <Alert severity="error" sx={{ width: '100%' }}>
+            Неверное имя пользователя или пароль
+          </Alert>
+        </Snackbar>
       </form>
     </div>
   );
 }
 
-export default RegistrationWindow;
+export default LoginWindow;
