@@ -1,22 +1,18 @@
 import React, { useContext, useEffect, useState } from 'react';
 import {
   Typography,
-  TextField,
   Button,
   AppBar,
   Toolbar,
-  InputLabel,
-  Select,
-  MenuItem,
   ListItemText,
 } from '@material-ui/core';
-import { useStyles } from './tasks-window-styles';
-import dayjs from 'dayjs';
+import { useStyles } from './project-window-styles';
 import { appContext } from '../../components/app-context/app-context';
 import { ListItemButton } from '@mui/material';
+import { Link } from 'react-router-dom';
 import { getStatus } from '../../utils/get-status';
 
-function TasksWindow() {
+function ProjectWindow() {
   const classes = useStyles();
   const [tasks, setTasks] = useState([]);
 
@@ -52,8 +48,16 @@ function TasksWindow() {
           </ListItemButton>
         ))
       }
+      <Link to='/tasks/create'>
+        <Button
+          color='primary'
+          className={classes.button}
+        >
+          Новая задача
+        </Button>
+      </Link>
     </div>
   );
 }
 
-export default TasksWindow;
+export default ProjectWindow;

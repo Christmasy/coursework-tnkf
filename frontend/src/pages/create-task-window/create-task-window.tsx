@@ -13,14 +13,24 @@ import { useStyles } from './create-task-window-styles';
 import {DateTimePicker} from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { appContext } from '../../components/app-context/app-context';
+import { NavigateFunction, useNavigate } from 'react-router-dom';
 
-async function createTask(token: string, asigneeId: number, title: string, description: string, deadline: dayjs.Dayjs, status: number) {
-  console.log(token);
+async function createTask(
+  token: string,
+  projectId: number,
+  asigneeId: number,
+  title: string,
+  description: string,
+  deadline: dayjs.Dayjs,
+  status: number,
+  navigate: NavigateFunction
+){
   await fetch('/api/tasks/create',{
     method:'POST',
     headers: {'Authorization': `Bearer ${token}`, 'Content-Type':'application/json'},
-    body: JSON.stringify({asigneeId, title, description, deadline, status})
+    body: JSON.stringify({asigneeId, projectId, title, description, deadline, status})
   });
+  navigate(`/projects/${projectId}`);
 }
 
 function CreateTaskWindow() {
@@ -35,6 +45,7 @@ function CreateTaskWindow() {
   const [projects, setProjects] = useState([]);
 
   const {state} = useContext(appContext) as any;
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -93,6 +104,7 @@ function CreateTaskWindow() {
         >
           {projects.map((project: any) => <MenuItem key={project.id} value={project.id}>{project.title}</MenuItem>)}
         </Select>
+        <InputLabel id="project">Исполнитель</InputLabel>
         <Select
           labelId="asignee"
           id="asignee"
@@ -128,7 +140,7 @@ function CreateTaskWindow() {
           variant="contained"
           color="primary"
           className={classes.button}
-          onClick={() => createTask(state, asignee, title, description, date, status)}
+          onClick={() => createTask(state, project, asignee, title, description, date, status, navigate)}
         >
           Создать
         </Button>

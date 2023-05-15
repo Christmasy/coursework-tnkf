@@ -5,7 +5,7 @@ import LoginWindow from './pages/login-window/login-window';
 import MainWindow from './pages/main-window/main-window';
 import { Routes, Route } from 'react-router-dom';
 import CreateTaskWindow from './pages/create-task-window/create-task-window';
-import TasksWindow from './pages/tasks-window/tasks-window';
+import ProjectWindow from './pages/project-window/project-window';
 import TaskWindow from './pages/task-window/task-window';
 import CreateProjectWindow from './pages/create-project-window/create-project-window';
 import ProjectsWindow from './pages/projects-window/projects-window';
@@ -30,8 +30,8 @@ function App() {
         element={<CreateTaskWindow />}
       />
       <Route
-        path={'/tasks'}
-        element={<TasksWindow />}
+        path={'/projects/:projectId'}
+        element={<ProjectWindow />}
       />
       <Route
         path={'/tasks/:taskId'}

@@ -17,7 +17,6 @@ function AppContext(props: any) {
     setState(token);
   }
 
-  console.log(`Change context ${state}`);
   return <appContext.Provider value={{state, setNewState}}>{props.children}</appContext.Provider>
 }
 
