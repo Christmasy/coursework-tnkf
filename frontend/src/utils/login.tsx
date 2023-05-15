@@ -14,5 +14,5 @@ export async function login(
   }
   const token = (await result.json()).data;
   setState(token);
-  navigate('/tasks');
+  navigate('/projects');
 }

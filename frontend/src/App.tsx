@@ -8,6 +8,7 @@ import CreateTaskWindow from './pages/create-task-window/create-task-window';
 import TasksWindow from './pages/tasks-window/tasks-window';
 import TaskWindow from './pages/task-window/task-window';
 import CreateProjectWindow from './pages/create-project-window/create-project-window';
+import ProjectsWindow from './pages/projects-window/projects-window';
 
 function App() {
   return (
@@ -35,6 +36,10 @@ function App() {
       <Route
         path={'/tasks/:taskId'}
         element={<TaskWindow />}
+      />
+      <Route
+        path={'/projects'}
+        element={<ProjectsWindow />}
       />
       <Route
         path={'/projects/create'}

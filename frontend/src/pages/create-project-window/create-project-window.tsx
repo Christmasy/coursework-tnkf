@@ -65,7 +65,7 @@ function CreateProjectWindow() {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
-            Создание задачи
+            Создание проекта
           </Typography>
         </Toolbar>
       </AppBar>
