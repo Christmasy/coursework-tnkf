@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import RegistrationWindow from './pages/registration-window/registration-window';
 import LoginWindow from './pages/login-window/login-window';
+import MainWindow from './pages/main-window/main-window';
 import { Routes, Route } from 'react-router-dom';
 import CreateTaskWindow from './pages/create-task-window/create-task-window';
 import TasksWindow from './pages/tasks-window/tasks-window';
@@ -11,6 +12,10 @@ import CreateProjectWindow from './pages/create-project-window/create-project-wi
 function App() {
   return (
     <Routes>
+      <Route
+        path={'/'}
+        element={<MainWindow />}
+      />
       <Route
         path={'/login'}
         element={<LoginWindow />}
