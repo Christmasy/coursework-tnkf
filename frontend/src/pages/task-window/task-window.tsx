@@ -1,19 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
 import {
   Typography,
-  TextField,
-  Button,
   AppBar,
   Toolbar,
-  InputLabel,
-  Select,
-  MenuItem,
-  ListItemText,
 } from '@material-ui/core';
 import { useStyles } from './task-window-styles';
-import dayjs from 'dayjs';
 import { appContext } from '../../components/app-context/app-context';
-import { ListItemButton } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { getStatus } from '../../utils/get-status';
 

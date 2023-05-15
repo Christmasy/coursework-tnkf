@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core';
 import { useStyles } from './login-window-styles';
 import { appContext } from '../../components/app-context/app-context';
-import { NavigateFunction, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Alert } from '@mui/material';
 import { login } from '../../utils/login';
 

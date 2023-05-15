@@ -5,7 +5,6 @@ import {
   Button,
   AppBar,
   Toolbar,
-  InputLabel,
   Select,
   MenuItem,
   ListItemText,
@@ -13,9 +12,9 @@ import {
 } from '@material-ui/core';
 import { useStyles } from './create-project-window-styles';
 import { appContext } from '../../components/app-context/app-context';
-import { ListItemButton } from '@mui/material';
+import { NavigateFunction, useNavigate } from 'react-router-dom';
 
-async function createProject(token: string, title: string, members: number[]) {
+async function createProject(token: string, title: string, members: number[], navigate: NavigateFunction) {
   const result = await fetch('/api/projects/create',{
     method:'POST',
     headers: {'Authorization': `Bearer ${token}`, 'Content-Type':'application/json'},
@@ -31,16 +30,16 @@ async function createProject(token: string, title: string, members: number[]) {
     }));
   }
   await Promise.all(proms);
+  navigate(`/projects`);
 }
 
 function CreateProjectWindow() {
   const classes = useStyles();
   const [title, setTitle] = useState('');
-  const [project, changeProject] = useState(0);
   const [member, changeMember] = useState(0);
   const [members, setMembers] = useState([] as any);
   const [users, setUsers] = useState([]);
-  const [projects, setProjects] = useState([]);
+  const navigate = useNavigate();
 
   function addMember() {
     setMembers([...members, member]);
@@ -110,7 +109,7 @@ function CreateProjectWindow() {
           variant="contained"
           color="primary"
           className={classes.button}
-          onClick={() => createProject(state, title, members)}
+          onClick={() => createProject(state, title, members, navigate)}
         >
           Создать
         </Button>
