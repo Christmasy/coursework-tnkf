@@ -7,6 +7,8 @@ export class Task {
   public description: string;
   public deadline: Date;
   public status: number;
+  public author: string;
+  public asignee: string;
 
   public constructor (
     id: number,
@@ -16,7 +18,9 @@ export class Task {
     title: string,
     description: string,
     deadline: Date,
-    status: number
+    status: number,
+    author: string,
+    asignee: string
   ) {
     this.id = id;
     this.authorId = authorId;
@@ -26,5 +30,7 @@ export class Task {
     this.description = description;
     this.deadline = deadline;
     this.status = status;
+    this.author = author;
+    this.asignee = asignee;
   }
 }

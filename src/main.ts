@@ -30,7 +30,6 @@ function authMiddleware(req: Request, res: Response, next: NextFunction) {
     res.send(JSON.stringify({data: null, error:'unauthorized'}));
     return;
   }
-  console.log(auth);
   // мы подписывали с помощью secret токен, сейчас проверяем подпись
   // когда проверили -- достаем из токена id пользователя
   (req as any).user = jwt.verify(auth.split(' ')[1], 'secret') as AuthUser;
@@ -109,20 +108,32 @@ app.get('/tasks/:id', async (req: Request, res: Response) => {
   res.send(JSON.stringify({data:result.rows[0], error:null}));
 });
 
-app.get('/tasks', async (req: Request, res: Response) => {
+app.get('/tasks', async (_: Request, res: Response) => {
   // только проекты, в которых уч-ет пользователь
-  const query = 'SELECT * FROM tasks JOIN project_users USING (project_id) WHERE project_users.user_id=$1';
-  const result = await dbClient.query(query, [(req as any).user.id]);
-  const tasks = result.rows.map((value: any) => new Task(
-    value.id,
-    value.author_id,
-    value.asignee_id,
-    value.project_id,
-    value.title,
-    value.description,
-    value.deadline,
-    value.status
-  ));
+  // const query = 'SELECT * FROM tasks JOIN project_users USING (project_id) WHERE project_users.user_id=$1';
+  // const result = await dbClient.query(query, [(req as any).user.id]);
+
+  // пока что все таски
+  const query = 'SELECT * FROM tasks';
+  const result = await dbClient.query(query);
+  const tasks = await Promise.all(result.rows.map(async (value: any) =>
+  {
+    const queryUser = 'SELECT username FROM users WHERE id=$1';
+    const resultAuthor = await dbClient.query(queryUser, [value.author_id]);
+    const resultAsignee = await dbClient.query(queryUser, [value.asignee_id]);
+    return new Task(
+      value.id,
+      value.author_id,
+      value.asignee_id,
+      value.project_id,
+      value.title,
+      value.description,
+      value.deadline,
+      value.status,
+      resultAuthor.rows[0].username,
+      resultAsignee.rows[0].username
+    );
+  }));
   res.send(JSON.stringify({data:tasks, error:null}));
 });
 
