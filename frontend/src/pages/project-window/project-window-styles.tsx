@@ -10,5 +10,5 @@ export const useStyles = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(2),
     height: '5ch',
-  },
+  }
 }));

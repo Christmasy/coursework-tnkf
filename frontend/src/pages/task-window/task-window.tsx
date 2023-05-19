@@ -3,11 +3,13 @@ import {
   Typography,
   AppBar,
   Toolbar,
+  CardContent,
 } from '@material-ui/core';
 import { useStyles } from './task-window-styles';
 import { appContext } from '../../components/app-context/app-context';
 import { useParams } from 'react-router-dom';
 import { getStatus } from '../../utils/get-status';
+import { Card } from '@mui/material';
 
 function TaskWindow() {
   const classes = useStyles();
@@ -32,14 +34,18 @@ function TaskWindow() {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
-            Задача
+            Задача {task.title}
           </Typography>
         </Toolbar>
       </AppBar>
-      <Typography>{task.title}</Typography>
-      <Typography>{task.description}</Typography>
-      <Typography>{task.deadline}</Typography>
-      <Typography>{getStatus(task.status)}</Typography>
+      <Card>
+        <CardContent>
+          <Typography variant='h5'>{task.title}</Typography>
+          <Typography>Описание задачи: {task.description}</Typography>
+          <Typography>Дедлайн: {task.deadline}</Typography>
+          <Typography>Статус: {getStatus(task.status)}</Typography>
+        </CardContent>
+      </Card>
     </div>
   );
 }

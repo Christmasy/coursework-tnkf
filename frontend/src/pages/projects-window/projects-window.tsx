@@ -1,16 +1,18 @@
 import React, { useContext, useEffect, useState } from 'react';
 import {
   Typography,
-  Button,
   AppBar,
   Toolbar,
-  ListItemText,
 } from '@material-ui/core';
-import { ListItemButton } from '@mui/material';
 import { useStyles } from './projects-window-styles';
-import { Link } from 'react-router-dom';
+import { Link as ReactLink } from 'react-router-dom';
 import { appContext } from '../../components/app-context/app-context';
   
+import {
+  CardContent,
+} from '@material-ui/core';
+import { Button, Card, Link } from '@mui/material';
+
 function ProjectsWindow() {
   const classes = useStyles();
 
@@ -40,19 +42,23 @@ function ProjectsWindow() {
       </AppBar>
       {
         projects.map((project:any) => (
-          <ListItemButton component="a" href={`/projects/${project.id}`}>
-            <ListItemText primary={project.title} />
-          </ListItemButton>
+          <Link underline="none" href={`/projects/${project.id}`}>
+            <Card>
+              <CardContent>
+                  <Typography variant='h5'>{project.title}</Typography>
+              </CardContent>
+            </Card>
+          </Link>
         ))
       }
-      <Link to='/projects/create'>
+      <ReactLink to='/projects/create'>
         <Button
           color='primary'
           className={classes.button}
         >
           Создать новый проект
         </Button>
-      </Link>
+      </ReactLink>
     </div>
   );
 }

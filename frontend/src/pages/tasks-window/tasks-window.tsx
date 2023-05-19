@@ -1,23 +1,21 @@
 import React, { useContext, useEffect, useState } from 'react';
 import {
   Typography,
-  //Button,
   AppBar,
   Toolbar,
-  ListItemText,
 } from '@material-ui/core';
-import { useStyles } from './project-window-styles';
+import { useStyles } from './tasks-window-styles';
 import { appContext } from '../../components/app-context/app-context';
-import { ListItemButton } from '@mui/material';
-//import { Link } from 'react-router-dom';
-import { getStatus } from '../../utils/get-status';
-import { Button, Card, Link } from '@mui/material';
+import { Link as ReactLink } from 'react-router-dom';
+
 import {
   CardContent,
 } from '@material-ui/core';
+import { Button, Card, Link } from '@mui/material';
 
-function ProjectWindow() {
+function TasksWindow() {
   const classes = useStyles();
+
   const [tasks, setTasks] = useState([]);
 
   const {state} = useContext(appContext) as any;
@@ -27,8 +25,13 @@ function ProjectWindow() {
       if(!state) {
         return;
       }
-      const result = await fetch('/api/tasks', {headers: {'Authorization': `Bearer ${state}`}});
-      setTasks((await result.json()).data);
+      const result = await fetch('/api/tasks', {
+        headers: {'Authorization': `Bearer ${state}`},
+      });
+      const t = (await result.json()).data;
+      console.log('aaaa');
+      console.log(t);
+      setTasks(t);
     }
     fetchData();
   }, [state]);
@@ -44,8 +47,9 @@ function ProjectWindow() {
       </AppBar>
       {
         tasks.map((task:any) => (
+          //<MiniCard id={task.id} title={task.title} author={task.author} assigner={task.assigner}/>
           <Link underline="none" href={`/tasks/${task.id}`}>
-            <Card>
+            <Card className={classes.card}>
               <CardContent>
                   <Typography variant='h5'>{task.title}</Typography>
                   <Typography>Автор: {task.author}</Typography>
@@ -55,8 +59,24 @@ function ProjectWindow() {
           </Link>
         ))
       }
+      <ReactLink to='/tasks/create'>
+        <Button
+          color='primary'
+          className={classes.button}
+        >
+          Новая задача
+        </Button>
+      </ReactLink>
+      <ReactLink to='/projects'>
+        <Button
+          color='primary'
+          className={classes.button}
+        >
+          К проектам
+        </Button>
+      </ReactLink>
     </div>
   );
 }
 
-export default ProjectWindow;
+export default TasksWindow;
