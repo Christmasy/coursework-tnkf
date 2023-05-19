@@ -10,6 +10,8 @@ import { appContext } from '../../components/app-context/app-context';
 import { useParams } from 'react-router-dom';
 import { getStatus } from '../../utils/get-status';
 import { Card } from '@mui/material';
+import { Link } from 'react-router-dom';
+import { Button } from '@mui/material';
 
 function TaskWindow() {
   const classes = useStyles();
@@ -46,6 +48,14 @@ function TaskWindow() {
           <Typography>Статус: {getStatus(task.status)}</Typography>
         </CardContent>
       </Card>
+      <Link to='/tasks'>
+        <Button
+          color='primary'
+          className={classes.button}
+        >
+          Вернуться ко всем задачам
+        </Button>
+      </Link>
     </div>
   );
 }
