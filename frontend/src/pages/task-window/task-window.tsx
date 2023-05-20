@@ -1,10 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-import {
-  Typography,
-  AppBar,
-  Toolbar,
-  CardContent,
-} from '@material-ui/core';
 import { useStyles } from './task-window-styles';
 import { appContext } from '../../components/app-context/app-context';
 import { useParams } from 'react-router-dom';
@@ -12,6 +6,7 @@ import { getStatus } from '../../utils/get-status';
 import { Card } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { Button } from '@mui/material';
+import { Typography, AppBar, Toolbar, CardContent } from '@mui/material';
 
 function TaskWindow() {
   const classes = useStyles();

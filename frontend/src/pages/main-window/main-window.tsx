@@ -1,9 +1,4 @@
-import {
-  Typography,
-  Button,
-  AppBar,
-  Toolbar,
-} from '@material-ui/core';
+import { Typography, Button, AppBar, Toolbar, } from '@mui/material';
 import { useStyles } from './main-window-styles';
 import { Link } from 'react-router-dom';
 

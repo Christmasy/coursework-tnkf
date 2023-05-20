@@ -1,9 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import {
-  Typography,
-  AppBar,
-  Toolbar,
-} from '@material-ui/core';
+import { Typography, AppBar, Toolbar } from '@mui/material';
 import { useStyles } from './projects-window-styles';
 import { Link as ReactLink } from 'react-router-dom';
 import { appContext } from '../../components/app-context/app-context';

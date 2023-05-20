@@ -1,11 +1,5 @@
 import React, { useContext, useState } from 'react';
-import {
-  Typography,
-  TextField,
-  Button,
-  AppBar,
-  Toolbar,
-} from '@material-ui/core';
+import { Typography, AppBar, Toolbar, TextField, Button } from '@mui/material';
 import { useStyles } from './registration-window-styles';
 import { login } from '../../utils/login';
 import { NavigateFunction, useNavigate } from 'react-router-dom';

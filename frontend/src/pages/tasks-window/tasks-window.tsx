@@ -1,16 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
-import {
-  Typography,
-  AppBar,
-  Toolbar,
-} from '@material-ui/core';
+import { Typography, AppBar, Toolbar, CardContent } from '@mui/material';
 import { useStyles } from './tasks-window-styles';
 import { appContext } from '../../components/app-context/app-context';
 import { Link as ReactLink } from 'react-router-dom';
-
-import {
-  CardContent,
-} from '@material-ui/core';
 import { Button, Card, Link } from '@mui/material';
 
 function TasksWindow() {

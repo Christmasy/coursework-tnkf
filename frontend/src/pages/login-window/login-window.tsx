@@ -1,16 +1,8 @@
 import React, { useContext, useState } from 'react';
-import {
-  Typography,
-  TextField,
-  Button,
-  AppBar,
-  Toolbar,
-  Snackbar,
-} from '@material-ui/core';
+import { Typography, TextField, Button, AppBar, Toolbar, Snackbar, Alert } from '@mui/material';
 import { useStyles } from './login-window-styles';
 import { appContext } from '../../components/app-context/app-context';
 import { useNavigate } from 'react-router-dom';
-import { Alert } from '@mui/material';
 import { login } from '../../utils/login';
 
 function LoginWindow() {

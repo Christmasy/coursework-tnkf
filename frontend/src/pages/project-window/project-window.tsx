@@ -1,20 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
-import {
-  Typography,
-  //Button,
-  AppBar,
-  Toolbar,
-  ListItemText,
-} from '@material-ui/core';
 import { useStyles } from './project-window-styles';
 import { appContext } from '../../components/app-context/app-context';
-import { ListItemButton } from '@mui/material';
-//import { Link } from 'react-router-dom';
-import { getStatus } from '../../utils/get-status';
-import { Button, Card, Link } from '@mui/material';
-import {
-  CardContent,
-} from '@material-ui/core';
+import { CardContent, Typography, AppBar, Toolbar, Card, Link } from '@mui/material';
 
 function ProjectWindow() {
   const classes = useStyles();

@@ -1,14 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import {
-  Typography,
-  TextField,
-  Button,
-  AppBar,
-  Toolbar,
-  InputLabel,
-  Select,
-  MenuItem,
-} from '@material-ui/core';
+import { Typography, TextField, Button, AppBar, Toolbar, InputLabel, Select, MenuItem } from '@mui/material';
 import { useStyles } from './create-task-window-styles';
 import {DateTimePicker} from '@mui/x-date-pickers';
 import dayjs from 'dayjs';

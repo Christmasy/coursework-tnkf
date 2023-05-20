@@ -1,15 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import {
-  Typography,
-  TextField,
-  Button,
-  AppBar,
-  Toolbar,
-  Select,
-  MenuItem,
-  ListItemText,
-  ListItem,
-} from '@material-ui/core';
+import { Typography, TextField, Button, AppBar, Toolbar, Select, MenuItem, ListItemText, ListItem } from '@mui/material';
 import { useStyles } from './create-project-window-styles';
 import { appContext } from '../../components/app-context/app-context';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
@@ -98,7 +88,6 @@ function CreateProjectWindow() {
           Добавить пользователя
         </Button>
         {
-          /*.filter((user: any) => members.find((member: any) => member === user.id)) */
           users.filter((user: any) => members.find((member: any) => member === user.id) !== undefined).map((user: any) => (
             <ListItem key={user.id}>
               <ListItemText primary={user.username} />
