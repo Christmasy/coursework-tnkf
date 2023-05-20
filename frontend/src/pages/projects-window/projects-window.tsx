@@ -1,12 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Typography, AppBar, Toolbar } from '@mui/material';
+import { Typography, AppBar, Toolbar, CardContent } from '@mui/material';
 import { useStyles } from './projects-window-styles';
 import { Link as ReactLink } from 'react-router-dom';
 import { appContext } from '../../components/app-context/app-context';
-  
-import {
-  CardContent,
-} from '@material-ui/core';
 import { Button, Card, Link } from '@mui/material';
 
 function ProjectsWindow() {
