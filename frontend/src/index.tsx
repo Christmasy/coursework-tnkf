@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
@@ -8,8 +8,8 @@ import AppContext from './components/app-context/app-context';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
-root.render(
+//const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
+ReactDOM.render(
   <React.StrictMode>
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <BrowserRouter>
@@ -18,7 +18,8 @@ root.render(
         </AppContext>
       </BrowserRouter>
     </LocalizationProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
+  document.getElementById('root')
 );
 
 

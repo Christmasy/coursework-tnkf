@@ -1,6 +1,6 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 
-export const useStyles = makeStyles((theme) => ({
+export const useStyles = makeStyles({
   root: {
     flexGrow: 1,
   },
@@ -11,27 +11,27 @@ export const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    marginTop: theme.spacing(4),
+    marginTop: '16px',
     justifyContent: 'center',
   },
   textField: {
-    margin: theme.spacing(2),
+    margin: '8px',
     width: '45ch',
   },
   button: {
-    margin: theme.spacing(2),
+    margin: '8px',
     height: '5ch',
   },
   projectInput: {
-    margin: theme.spacing(2),
+    margin: '8px',
     width: '45ch',
   },
   asigneeInput: {
-    margin: theme.spacing(2),
+    margin: '8px',
     width: '45ch',
   },
   statusInput: {
-    margin: theme.spacing(2),
+    margin: '8px',
     width: '45ch',
   }
-}));
+});

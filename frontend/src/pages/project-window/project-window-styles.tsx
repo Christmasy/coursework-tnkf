@@ -1,6 +1,6 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 
-export const useStyles = makeStyles((theme) => ({
+export const useStyles = makeStyles({
   root: {
     flexGrow: 1,
   },
@@ -8,7 +8,7 @@ export const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   button: {
-    margin: theme.spacing(2),
+    margin: '8px',
     height: '5ch',
   }
-}));
+});
