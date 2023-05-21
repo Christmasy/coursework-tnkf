@@ -1,6 +1,6 @@
 import { SMTPClient } from 'emailjs';
 
-export async function sendMail(recipientEmail: string, text: string) {
+export async function sendMail(recipientEmail: string, text: string, title: string) {
   const client = new SMTPClient({
     user: 'b1186@yandex.ru',
     password: 'enxgytvtggbyvnpa',
@@ -13,7 +13,7 @@ export async function sendMail(recipientEmail: string, text: string) {
       text: text,
       from: 'b1186@yandex.ru',
       to: recipientEmail,
-      subject: 'Task created',
+      subject: title,
     },
     (err, message) => {
       console.log(err || message);

@@ -51,6 +51,14 @@ function TaskWindow() {
           Вернуться ко всем задачам
         </Button>
       </Link>
+      <Link to={`/tasks/${taskId}/edit`}>
+        <Button
+          color='primary'
+          className={classes.button}
+        >
+          Редактировать задачу
+        </Button>
+      </Link>
     </div>
   );
 }
