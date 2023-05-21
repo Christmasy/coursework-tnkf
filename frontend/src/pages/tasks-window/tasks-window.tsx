@@ -21,8 +21,6 @@ function TasksWindow() {
         headers: {'Authorization': `Bearer ${state}`},
       });
       const t = (await result.json()).data;
-      console.log('aaaa');
-      console.log(t);
       setTasks(t);
     }
     fetchData();
