@@ -17,7 +17,9 @@
     "clean": "rimraf dist",
     "ts": "ts-node",
     "mock:server": "json-server ./mocks/mock-server-data.json --port 3123",
-    "vercel-build": "echo hello"
+    "vercel-build": "echo hello",
+    "postinstall": "npm run typings",
+    "typings": "typings install"
   },
   "devDependencies": {
     "@types/body-parser": "^1.19.2",
