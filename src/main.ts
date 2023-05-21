@@ -1,5 +1,5 @@
 import bodyParser from 'body-parser';
-import express, { Express, Request, Response, NextFunction } from 'express';
+import express, { Express, Request, Response } from 'express';
 import { dbClient } from './db.js';
 import jwt from 'jsonwebtoken';
 import { Task } from './models/task.js';
@@ -8,6 +8,7 @@ import { User } from './models/user.js';
 import { migrate } from 'postgres-migrations';
 import { Project } from './models/project.js';
 import { sendMail } from './email.js';
+import { authMiddleware } from './middlewares.js';
 
 const app: Express = express();
 const port = 9090;
@@ -16,27 +17,6 @@ app.use(authMiddleware);
 app.use(bodyParser.json());
 
 export default app;
-
-interface AuthUser {
-  id: number;
-}
-
-function authMiddleware(req: Request, res: Response, next: NextFunction) {
-  if(req.path === '/reg' || req.path === '/login') {
-    next();
-    return;
-  }
-  const auth = req.get('Authorization');
-  if(!auth) {
-    res.status(401);
-    res.send(JSON.stringify({data: null, error:'unauthorized'}));
-    return;
-  }
-  // мы подписывали с помощью secret токен, сейчас проверяем подпись
-  // когда проверили -- достаем из токена id пользователя
-  (req as any).user = jwt.verify(auth.split(' ')[1], 'secret') as AuthUser;
-  next();
-}
 
 app.post('/reg', async (req: Request, res: Response) => {
   const result = await dbClient.query('INSERT INTO users (username, password, email) VALUES ($1, $2, $3) RETURNING id', [req.body.username, req.body.password, req.body.email]);
