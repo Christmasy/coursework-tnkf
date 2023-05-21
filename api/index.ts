@@ -1,4 +1,3 @@
-// eslint-disable-next-line
-import app from '../src/main.ts';
+import app from '../src/main.js';
 
 export default app;
