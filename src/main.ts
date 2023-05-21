@@ -15,6 +15,8 @@ const port = 9090;
 app.use(authMiddleware);
 app.use(bodyParser.json());
 
+export default app;
+
 interface AuthUser {
   id: number;
 }
