@@ -1,6 +1,8 @@
 import bodyParser from 'body-parser';
 import express, { Express, Request, Response } from 'express';
-import { dbClient } from './db.js';
+//import { dbClient } from './db.js';
+//import { db } from '@vercel/postgres';
+//import type { VercelRequest, VercelResponse } from '@vercel/node';
 import jwt from 'jsonwebtoken';
 import { Task } from './models/task.js';
 import { Comment } from './models/comment.js';
@@ -9,6 +11,14 @@ import { migrate } from 'postgres-migrations';
 import { Project } from './models/project.js';
 import { authMiddleware } from './middlewares.js';
 import { sendAnswerAndMail } from './extra-functions/send-answer-and-email.js';
+
+import { createPool } from '@vercel/postgres';
+import dotenv from 'dotenv';
+dotenv.config();
+
+const db = createPool({
+  connectionString: process.env.POSTGRES_URL,
+});
 
 const app: Express = express();
 const port = 9090;
@@ -19,12 +29,12 @@ app.use(bodyParser.json());
 export default app;
 
 app.post('/reg', async (req: Request, res: Response) => {
-  const result = await dbClient.query('INSERT INTO users (username, password, email) VALUES ($1, $2, $3) RETURNING id', [req.body.username, req.body.password, req.body.email]);
+  const result = await db.query('INSERT INTO users (username, password, email) VALUES ($1, $2, $3) RETURNING id', [req.body.username, req.body.password, req.body.email]);
   res.send(JSON.stringify({data:{id:result.rows[0].id, ...req.body}, error:null}));
 });
 
 app.post('/login', async (req: Request, res: Response) => {
-  const result = await dbClient.query('SELECT * FROM users WHERE username=$1 AND password=$2', [req.body.username, req.body.password]);
+  const result = await db.query('SELECT * FROM users WHERE username=$1 AND password=$2', [req.body.username, req.body.password]);
   if(result.rowCount === 0) {
     res.status(401);
     res.send(JSON.stringify({data: null, error:'username or password invalid'}));
@@ -34,7 +44,7 @@ app.post('/login', async (req: Request, res: Response) => {
 });
 
 app.get('/users', async (_: Request, res: Response) => {
-  const result = await dbClient.query('SELECT * FROM users');
+  const result = await db.query('SELECT * FROM users');
   const users = result.rows.map((value: any) => new User(
     value.id,
     value.username
@@ -52,7 +62,7 @@ app.post('/tasks/create', async (req: Request, res: Response) => {
       deadline,
       status
   ) VALUES ($1, $2, $3, $4, $5, $6::timestamp, $7) RETURNING id`;
-  const result = await dbClient.query(query, [
+  const result = await db.query(query, [
     (req as any).user.id,
     req.body.asigneeId,
     req.body.projectId,
@@ -76,7 +86,7 @@ app.post('/tasks/:id/edit', async (req: Request, res: Response) => {
       status
   ) = ($1, $2, $3, $4, $5, $6::timestamp, $7) WHERE id=$8`;
 
-  await dbClient.query(query, [
+  await db.query(query, [
     (req as any).user.id,
     req.body.asigneeId,
     req.body.projectId,
@@ -92,7 +102,7 @@ app.post('/tasks/:id/edit', async (req: Request, res: Response) => {
 
 app.get('/tasks/:id', async (req: Request, res: Response) => {
   const query = 'SELECT * FROM tasks WHERE id=$1';
-  const result = await dbClient.query(query, [req.params.id]);
+  const result = await db.query(query, [req.params.id]);
   if(result.rowCount === 0) {
     res.status(404);
     res.send(JSON.stringify({data:null, error:'not found'}));
@@ -107,12 +117,12 @@ app.get('/tasks', async (_: Request, res: Response) => {
 
   // пока что все таски
   const query = 'SELECT * FROM tasks';
-  const result = await dbClient.query(query);
+  const result = await db.query(query);
   const tasks = await Promise.all(result.rows.map(async (value: any) =>
   {
     const queryUser = 'SELECT username FROM users WHERE id=$1';
-    const resultAuthor = await dbClient.query(queryUser, [value.author_id]);
-    const resultAsignee = await dbClient.query(queryUser, [value.asignee_id]);
+    const resultAuthor = await db.query(queryUser, [value.author_id]);
+    const resultAsignee = await db.query(queryUser, [value.asignee_id]);
     return new Task(
       value.id,
       value.author_id,
@@ -132,12 +142,12 @@ app.get('/tasks', async (_: Request, res: Response) => {
 app.get('/projects/:id', async (req: Request, res: Response) => {
   // только таски этого проекта
   const query = 'SELECT * FROM tasks WHERE project_id=$1';
-  const result = await dbClient.query(query, [req.params.id]);
+  const result = await db.query(query, [req.params.id]);
   const tasks = await Promise.all(result.rows.map(async (value: any) =>
   {
     const queryUser = 'SELECT username FROM users WHERE id=$1';
-    const resultAuthor = await dbClient.query(queryUser, [value.author_id]);
-    const resultAsignee = await dbClient.query(queryUser, [value.asignee_id]);
+    const resultAuthor = await db.query(queryUser, [value.author_id]);
+    const resultAsignee = await db.query(queryUser, [value.asignee_id]);
     return new Task(
       value.id,
       value.author_id,
@@ -156,7 +166,7 @@ app.get('/projects/:id', async (req: Request, res: Response) => {
 
 app.post('/comments/create', async (req: Request, res: Response) => {
   const query = 'INSERT INTO comments (task_id, author_id, create_time, content) VALUES ($1, $2, $3::timestamp, $4) RETURNING id';
-  const result = await dbClient.query(query, [
+  const result = await db.query(query, [
     req.body.taskId,
     (req as any).user.id,
     req.body.createTime,
@@ -167,7 +177,7 @@ app.post('/comments/create', async (req: Request, res: Response) => {
 
 app.get('/comments', async (_: Request, res: Response) => {
   const query = 'SELECT * FROM comments';
-  const result = await dbClient.query(query);
+  const result = await db.query(query);
   const comments = result.rows.map((value: any) => new Comment(
     value.id,
     value.task_id,
@@ -180,19 +190,19 @@ app.get('/comments', async (_: Request, res: Response) => {
 
 app.post('/projects/create', async (req: Request, res: Response) => {
   const query = 'INSERT INTO projects (title) VALUES ($1) RETURNING id';
-  const result = await dbClient.query(query, [req.body.title]);
+  const result = await db.query(query, [req.body.title]);
   res.send(JSON.stringify({data:{id:result.rows[0].id, ...req.body}, error:null}));
 });
 
 app.post('/projects/:id/adduser', async (req: Request, res: Response) => {
   const query = 'INSERT INTO project_users (project_id, user_id) VALUES ($1, $2)';
-  await dbClient.query(query, [req.params.id, req.body.userId]);
+  await db.query(query, [req.params.id, req.body.userId]);
   res.send(JSON.stringify({data:null, error:null}));
 });
 
 app.get('/projects', async (_: Request, res: Response) => {
   const query = 'SELECT * FROM projects';
-  const result = await dbClient.query(query);
+  const result = await db.query(query);
   const projects = result.rows.map((value: any) => new Project(
     value.id,
     value.title
@@ -201,8 +211,8 @@ app.get('/projects', async (_: Request, res: Response) => {
 });
 
 async function main() {
-  await dbClient.connect();
-  await migrate({client: (dbClient as any)}, './migrations');
+  await db.connect();
+  await migrate({client: (db as any)}, './migrations');
   app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
   });
