@@ -2,10 +2,13 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useStyles } from './project-window-styles';
 import { appContext } from '../../components/app-context/app-context';
 import { CardContent, Typography, AppBar, Toolbar, Card, Link } from '@mui/material';
+import { useParams } from 'react-router-dom';
 
 function ProjectWindow() {
   const classes = useStyles();
   const [tasks, setTasks] = useState([]);
+
+  const { projectId } = useParams();
 
   const {state} = useContext(appContext) as any;
 
@@ -14,7 +17,7 @@ function ProjectWindow() {
       if(!state) {
         return;
       }
-      const result = await fetch('/api/tasks', {headers: {'Authorization': `Bearer ${state}`}});
+      const result = await fetch(`/api/projects/${projectId}`, {headers: {'Authorization': `Bearer ${state}`}});
       setTasks((await result.json()).data);
     }
     fetchData();

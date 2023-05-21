@@ -119,6 +119,31 @@ app.get('/tasks', async (_: Request, res: Response) => {
   res.send(JSON.stringify({data:tasks, error:null}));
 });
 
+app.get('/projects/:id', async (req: Request, res: Response) => {
+  // только таски этого проекта
+  const query = 'SELECT * FROM tasks WHERE project_id=$1';
+  const result = await dbClient.query(query, [req.params.id]);
+  const tasks = await Promise.all(result.rows.map(async (value: any) =>
+  {
+    const queryUser = 'SELECT username FROM users WHERE id=$1';
+    const resultAuthor = await dbClient.query(queryUser, [value.author_id]);
+    const resultAsignee = await dbClient.query(queryUser, [value.asignee_id]);
+    return new Task(
+      value.id,
+      value.author_id,
+      value.asignee_id,
+      value.project_id,
+      value.title,
+      value.description,
+      value.deadline,
+      value.status,
+      resultAuthor.rows[0].username,
+      resultAsignee.rows[0].username
+    );
+  }));
+  res.send(JSON.stringify({data:tasks, error:null}));
+});
+
 app.post('/comments/create', async (req: Request, res: Response) => {
   const query = 'INSERT INTO comments (task_id, author_id, create_time, content) VALUES ($1, $2, $3::timestamp, $4) RETURNING id';
   const result = await dbClient.query(query, [
