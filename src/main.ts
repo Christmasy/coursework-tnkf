@@ -7,8 +7,8 @@ import { Comment } from './models/comment.js';
 import { User } from './models/user.js';
 import { migrate } from 'postgres-migrations';
 import { Project } from './models/project.js';
-import { sendMail } from './email.js';
 import { authMiddleware } from './middlewares.js';
+import { sendAnswerAndMail } from './extra-functions/send-answer-and-email.js';
 
 const app: Express = express();
 const port = 9090;
@@ -62,22 +62,7 @@ app.post('/tasks/create', async (req: Request, res: Response) => {
     req.body.status
   ]);
 
-  if (!req.body.asigneeId) {
-    res.send(JSON.stringify({data:{id:result.rows[0].id, authorId:(req as any).user.id, ...req.body}, error:null}));
-    return;
-  }
-  const queryEmailAndTitle = 'SELECT email, projects.title FROM tasks JOIN users ON asignee_id = users.id JOIN projects ON project_id = projects.id WHERE tasks.id=$1';
-  const resultEmailAndTitle = await dbClient.query(queryEmailAndTitle, [result.rows[0].id]);
-  const queryAuthor = 'SELECT username FROM users WHERE id=$1';
-  const resultAuthor = await dbClient.query(queryAuthor, [(req as any).user.id]);
-  try {
-    sendMail(resultEmailAndTitle.rows[0].email, `${resultAuthor.rows[0].username} added task to project ${resultEmailAndTitle.rows[0].title}:
-Title: ${req.body.title}, deadline:${req.body.deadline}`, 'Task created');
-  } catch (e) {
-    console.error(`can't send email, error ${e}`);
-  }
-
-  res.send(JSON.stringify({data:{id:result.rows[0].id, authorId:(req as any).user.id, ...req.body}, error:null}));
+  sendAnswerAndMail(req, res, result.rows[0].id, 'created');
 });
 
 app.post('/tasks/:id/edit', async (req: Request, res: Response) => {
@@ -102,22 +87,7 @@ app.post('/tasks/:id/edit', async (req: Request, res: Response) => {
     req.params.id
   ]);
 
-  if (!req.body.asigneeId) {
-    res.send(JSON.stringify({data:{id:req.params.id, authorId:(req as any).user.id, ...req.body}, error:null}));
-    return;
-  }
-  const queryEmailAndTitle = 'SELECT email, projects.title FROM tasks JOIN users ON asignee_id = users.id JOIN projects ON project_id = projects.id WHERE tasks.id=$1';
-  const resultEmailAndTitle = await dbClient.query(queryEmailAndTitle, [req.params.id]);
-  const queryAuthor = 'SELECT username FROM users WHERE id=$1';
-  const resultAuthor = await dbClient.query(queryAuthor, [(req as any).user.id]);
-  try {
-    sendMail(resultEmailAndTitle.rows[0].email, `${resultAuthor.rows[0].username} updated task in project ${resultEmailAndTitle.rows[0].title}:
-Title: ${req.body.title}, deadline:${req.body.deadline}`, 'Task edited');
-  } catch (e) {
-    console.error(`can't send email, error ${e}`);
-  }
-
-  res.send(JSON.stringify({data:{id:req.params.id, authorId:(req as any).user.id, ...req.body}, error:null}));
+  sendAnswerAndMail(req, res, req.params.id, 'updated');
 });
 
 app.get('/tasks/:id', async (req: Request, res: Response) => {
