@@ -29,8 +29,7 @@
   },
   "include": [
     "./api/*.ts",
-    "src/**/*.ts",
-    ["src", "decs.d.ts"]
+    "src/**/*.ts"
   ],
   "exclude": [
     "node_modules",
