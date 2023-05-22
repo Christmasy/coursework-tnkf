@@ -1,5 +1,5 @@
 import { sendMail } from './email.js';
-import { dbClient } from '../db.js';
+import { db } from '../db.js';
 import { Request, Response } from 'express';
 
 export async function sendAnswerAndMail(req: Request, res: Response, taskId: string, taskStatus: string) {
@@ -8,9 +8,9 @@ export async function sendAnswerAndMail(req: Request, res: Response, taskId: str
     return;
   }
   const queryEmailAndTitle = 'SELECT email, projects.title FROM tasks JOIN users ON asignee_id = users.id JOIN projects ON project_id = projects.id WHERE tasks.id=$1';
-  const resultEmailAndTitle = await dbClient.query(queryEmailAndTitle, [taskId]);
+  const resultEmailAndTitle = await db.query(queryEmailAndTitle, [taskId]);
   const queryAuthor = 'SELECT username FROM users WHERE id=$1';
-  const resultAuthor = await dbClient.query(queryAuthor, [(req as any).user.id]);
+  const resultAuthor = await db.query(queryAuthor, [(req as any).user.id]);
   try {
     sendMail(resultEmailAndTitle.rows[0].email, `${resultAuthor.rows[0].username} ${taskStatus} task in project ${resultEmailAndTitle.rows[0].title}:
 Title: ${req.body.title}, deadline:${req.body.deadline}`, `Task ${taskStatus}`);

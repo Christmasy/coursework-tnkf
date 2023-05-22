@@ -1,6 +1,6 @@
 import bodyParser from 'body-parser';
 import express, { Express, Request, Response } from 'express';
-//import { dbClient } from './db.js';
+import { db } from './db.js';
 //import { db } from '@vercel/postgres';
 //import type { VercelRequest, VercelResponse } from '@vercel/node';
 import jwt from 'jsonwebtoken';
@@ -12,13 +12,13 @@ import { Project } from './models/project.js';
 import { authMiddleware } from './middlewares.js';
 import { sendAnswerAndMail } from './extra-functions/send-answer-and-email.js';
 
-import { createPool } from '@vercel/postgres';
+//import { createPool } from '@vercel/postgres';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const db = createPool({
-  connectionString: process.env.POSTGRES_URL,
-});
+//const db = createPool({
+//  connectionString: process.env.POSTGRES_URL,
+//});
 
 const app: Express = express();
 const port = 9090;
