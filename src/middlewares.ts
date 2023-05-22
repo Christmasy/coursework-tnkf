@@ -6,7 +6,7 @@ interface AuthUser {
 }
 
 export function authMiddleware(req: Request, res: Response, next: NextFunction) {
-  if(req.path === 'https://coursework-christmasy-backend-otnswshmv-react-tnkf.vercel.app/api/reg' || req.path === 'https://coursework-christmasy-backend-otnswshmv-react-tnkf.vercel.app/api/login') {
+  if(req.path === '/reg' || req.path === '/login') {
     next();
     return;
   }
