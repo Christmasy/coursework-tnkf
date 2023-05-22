@@ -7,7 +7,8 @@ export async function login(
   navigate: NavigateFunction,
   setError: (hasError: boolean) => void
 ){
-  const result = await fetch('/api/login', {method:'POST', body:JSON.stringify({username:email, password}), headers:{'Content-Type':'application/json'}});
+  console.log(process.env.REACT_APP_API_URL);
+  const result = await fetch(process.env.REACT_APP_API_URL + '/login', {mode: 'no-cors', method:'POST', body:JSON.stringify({username:email, password}), headers:{'Content-Type':'application/json'}});
   if(result.status === 401) {
     setError(true);
     return;
