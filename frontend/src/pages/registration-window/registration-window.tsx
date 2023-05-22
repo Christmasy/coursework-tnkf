@@ -4,6 +4,7 @@ import { useStyles } from './registration-window-styles';
 import { login } from '../../utils/login';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 import { appContext } from '../../components/app-context/app-context';
+import { REACT_APP_API_URL } from '../../utils/url';
 
 async function reg(
   email: string,
@@ -11,7 +12,7 @@ async function reg(
   setNewState: (token: string) => void,
   navigate: NavigateFunction
 ){
-  await fetch(process.env.REACT_APP_API_URL + '/reg', {mode: 'no-cors', method:'POST', body:JSON.stringify({username:email, password, email}), headers:{'Content-Type':'application/json'}});
+  await fetch(REACT_APP_API_URL + '/reg', {mode: 'no-cors', method:'POST', body:JSON.stringify({username:email, password, email}), headers:{'Content-Type':'application/json'}});
   await login(email, password, setNewState, navigate, () => {});
 }
 

@@ -3,6 +3,7 @@ import { useStyles } from './project-window-styles';
 import { appContext } from '../../components/app-context/app-context';
 import { CardContent, Typography, AppBar, Toolbar, Card, Link } from '@mui/material';
 import { useParams } from 'react-router-dom';
+import { REACT_APP_API_URL } from '../../utils/url';
 
 function ProjectWindow() {
   const classes = useStyles();
@@ -17,7 +18,7 @@ function ProjectWindow() {
       if(!state) {
         return;
       }
-      const result = await fetch(`/api/projects/${projectId}`, {headers: {'Authorization': `Bearer ${state}`}});
+      const result = await fetch(REACT_APP_API_URL + `/projects/${projectId}`, {headers: {'Authorization': `Bearer ${state}`}});
       setTasks((await result.json()).data);
     }
     fetchData();

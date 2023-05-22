@@ -4,6 +4,7 @@ import { useStyles } from './projects-window-styles';
 import { Link as ReactLink } from 'react-router-dom';
 import { appContext } from '../../components/app-context/app-context';
 import { Button, Card, Link } from '@mui/material';
+import { REACT_APP_API_URL } from '../../utils/url';
 
 function ProjectsWindow() {
   const classes = useStyles();
@@ -17,7 +18,7 @@ function ProjectsWindow() {
       if(!state) {
         return;
       }
-      const result = await fetch('/api/projects', {headers: {'Authorization': `Bearer ${state}`}});
+      const result = await fetch(REACT_APP_API_URL + '/projects', {headers: {'Authorization': `Bearer ${state}`}});
       setProjects((await result.json()).data);
     }
     fetchData();

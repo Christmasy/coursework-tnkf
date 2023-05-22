@@ -7,6 +7,7 @@ import { Card } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { Button } from '@mui/material';
 import { Typography, AppBar, Toolbar, CardContent } from '@mui/material';
+import { REACT_APP_API_URL } from '../../utils/url';
 
 function TaskWindow() {
   const classes = useStyles();
@@ -20,7 +21,7 @@ function TaskWindow() {
       if(!state) {
         return;
       }
-      const result = await fetch(`/api/tasks/${taskId}`, {headers: {'Authorization': `Bearer ${state}`}});
+      const result = await fetch(REACT_APP_API_URL + `/tasks/${taskId}`, {headers: {'Authorization': `Bearer ${state}`}});
       setTask((await result.json()).data);
     }
     fetchData();

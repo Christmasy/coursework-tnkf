@@ -3,9 +3,10 @@ import { Typography, TextField, Button, AppBar, Toolbar, Select, MenuItem, ListI
 import { useStyles } from './create-project-window-styles';
 import { appContext } from '../../components/app-context/app-context';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
+import { REACT_APP_API_URL } from '../../utils/url';
 
 async function createProject(token: string, title: string, members: number[], navigate: NavigateFunction) {
-  const result = await fetch(`${process.env.API_URL}/api/projects/create`,{
+  const result = await fetch(REACT_APP_API_URL + 'projects/create',{
     method:'POST',
     headers: {'Authorization': `Bearer ${token}`, 'Content-Type':'application/json'},
     body: JSON.stringify({title})
@@ -13,7 +14,7 @@ async function createProject(token: string, title: string, members: number[], na
   const proms = [];
   const projectId = (await result.json()).data.id;
   for(const member of members) {
-    proms.push(fetch(`/api/projects/${projectId}/adduser`, {
+    proms.push(fetch(REACT_APP_API_URL + `/projects/${projectId}/adduser`, {
       method:'POST',
       headers: {'Authorization': `Bearer ${token}`, 'Content-Type':'application/json'},
       body: JSON.stringify({userId: member})

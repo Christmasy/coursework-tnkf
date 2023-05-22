@@ -5,6 +5,7 @@ import {DateTimePicker} from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { appContext } from '../../components/app-context/app-context';
 import { NavigateFunction, useNavigate, useParams } from 'react-router-dom';
+import { REACT_APP_API_URL } from '../../utils/url';
 
 async function editTask(
   token: string,
@@ -17,7 +18,7 @@ async function editTask(
   navigate: NavigateFunction,
   taskId: string
 ){
-  await fetch(`/api/tasks/${taskId}/edit`,{
+  await fetch(REACT_APP_API_URL + `/tasks/${taskId}/edit`,{
     method:'POST',
     headers: {'Authorization': `Bearer ${token}`, 'Content-Type':'application/json'},
     body: JSON.stringify({asigneeId, projectId, title, description, deadline, status, taskId})
@@ -45,11 +46,11 @@ function EditTaskWindow() {
       if(!state) {
         return;
       }
-      const taskResult = await fetch(`/api/tasks/${taskId}`, {headers: {'Authorization': `Bearer ${state}`}});
+      const taskResult = await fetch(REACT_APP_API_URL + `/tasks/${taskId}`, {headers: {'Authorization': `Bearer ${state}`}});
       const task = (await taskResult.json()).data;
-      const usersResult = await fetch('/api/users', {headers: {'Authorization': `Bearer ${state}`}});
+      const usersResult = await fetch(REACT_APP_API_URL + '/users', {headers: {'Authorization': `Bearer ${state}`}});
       const users = await usersResult.json();
-      const projectsResult = await fetch('/api/projects', {headers: {'Authorization': `Bearer ${state}`}});
+      const projectsResult = await fetch(REACT_APP_API_URL + '/projects', {headers: {'Authorization': `Bearer ${state}`}});
       const projects = await projectsResult.json();
       setUsers(users.data);
       setProjects(projects.data);

@@ -5,6 +5,7 @@ import {DateTimePicker} from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { appContext } from '../../components/app-context/app-context';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
+import { REACT_APP_API_URL } from '../../utils/url';
 
 async function createTask(
   token: string,
@@ -16,7 +17,7 @@ async function createTask(
   status: number,
   navigate: NavigateFunction
 ){
-  await fetch('/api/tasks/create',{
+  await fetch(REACT_APP_API_URL + '/tasks/create',{
     method:'POST',
     headers: {'Authorization': `Bearer ${token}`, 'Content-Type':'application/json'},
     body: JSON.stringify({asigneeId, projectId, title, description, deadline, status})
@@ -43,9 +44,9 @@ function CreateTaskWindow() {
       if(!state) {
         return;
       }
-      const usersResult = await fetch('/api/users', {headers: {'Authorization': `Bearer ${state}`}});
+      const usersResult = await fetch(REACT_APP_API_URL + '/users', {headers: {'Authorization': `Bearer ${state}`}});
       const users = await usersResult.json();
-      const projectsResult = await fetch('/api/projects', {headers: {'Authorization': `Bearer ${state}`}});
+      const projectsResult = await fetch(REACT_APP_API_URL + '/projects', {headers: {'Authorization': `Bearer ${state}`}});
       const projects = await projectsResult.json();
       setUsers(users.data);
       setProjects(projects.data);
