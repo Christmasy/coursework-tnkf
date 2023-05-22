@@ -6,7 +6,7 @@ interface AuthUser {
 }
 
 export function authMiddleware(req: Request, res: Response, next: NextFunction) {
-  if(req.path === '/reg' || req.path === '/login') {
+  if(req.path === '/api/reg' || req.path === '/api/login' || !req.path.startsWith('/api')) {
     next();
     return;
   }

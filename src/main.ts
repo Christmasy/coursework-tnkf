@@ -25,16 +25,24 @@ const port = 9090;
 
 app.use(authMiddleware);
 app.use(bodyParser.json());
+app.use('/static', express.static('./build/static'));
 
 export default app;
 
-app.post('/reg', async (req: Request, res: Response) => {
+app.get('*', async (_: Request, res: Response) => {
+  res.sendFile('./build/index.html', {root: './'});
+});
+
+app.post('/api/reg', async (req: Request, res: Response) => {
   const result = await db.query('INSERT INTO users (username, password, email) VALUES ($1, $2, $3) RETURNING id', [req.body.username, req.body.password, req.body.email]);
   res.send(JSON.stringify({data:{id:result.rows[0].id, ...req.body}, error:null}));
 });
 
-app.post('/login', async (req: Request, res: Response) => {
+app.post('/api/login', async (req: Request, res: Response) => {
   const result = await db.query('SELECT * FROM users WHERE username=$1 AND password=$2', [req.body.username, req.body.password]);
+  console.log(req.body.username);
+  console.log(req.body.password);
+  console.log(result.rowCount);
   if(result.rowCount === 0) {
     res.status(401);
     res.send(JSON.stringify({data: null, error:'username or password invalid'}));
@@ -43,7 +51,7 @@ app.post('/login', async (req: Request, res: Response) => {
   res.send(JSON.stringify({data:jwt.sign({ id: result.rows[0].id }, 'secret'), error:null}));
 });
 
-app.get('/users', async (_: Request, res: Response) => {
+app.get('/api/users', async (_: Request, res: Response) => {
   const result = await db.query('SELECT * FROM users');
   const users = result.rows.map((value: any) => new User(
     value.id,
@@ -52,7 +60,7 @@ app.get('/users', async (_: Request, res: Response) => {
   res.send(JSON.stringify({data:users, error:null}));
 });
 
-app.post('/tasks/create', async (req: Request, res: Response) => {
+app.post('/api/tasks/create', async (req: Request, res: Response) => {
   const query = `INSERT INTO tasks (
       author_id,
       asignee_id,
@@ -75,7 +83,7 @@ app.post('/tasks/create', async (req: Request, res: Response) => {
   sendAnswerAndMail(req, res, result.rows[0].id, 'created');
 });
 
-app.post('/tasks/:id/edit', async (req: Request, res: Response) => {
+app.post('/api/tasks/:id/edit', async (req: Request, res: Response) => {
   const query = `UPDATE tasks SET (
       author_id,
       asignee_id,
@@ -100,7 +108,7 @@ app.post('/tasks/:id/edit', async (req: Request, res: Response) => {
   sendAnswerAndMail(req, res, req.params.id, 'updated');
 });
 
-app.get('/tasks/:id', async (req: Request, res: Response) => {
+app.get('/api/tasks/:id', async (req: Request, res: Response) => {
   const query = 'SELECT * FROM tasks WHERE id=$1';
   const result = await db.query(query, [req.params.id]);
   if(result.rowCount === 0) {
@@ -110,7 +118,7 @@ app.get('/tasks/:id', async (req: Request, res: Response) => {
   res.send(JSON.stringify({data:result.rows[0], error:null}));
 });
 
-app.get('/tasks', async (_: Request, res: Response) => {
+app.get('/api/tasks', async (_: Request, res: Response) => {
   // только проекты, в которых уч-ет пользователь
   // const query = 'SELECT * FROM tasks JOIN project_users USING (project_id) WHERE project_users.user_id=$1';
   // const result = await dbClient.query(query, [(req as any).user.id]);
@@ -139,7 +147,7 @@ app.get('/tasks', async (_: Request, res: Response) => {
   res.send(JSON.stringify({data:tasks, error:null}));
 });
 
-app.get('/projects/:id', async (req: Request, res: Response) => {
+app.get('/api/projects/:id', async (req: Request, res: Response) => {
   // только таски этого проекта
   const query = 'SELECT * FROM tasks WHERE project_id=$1';
   const result = await db.query(query, [req.params.id]);
@@ -164,7 +172,7 @@ app.get('/projects/:id', async (req: Request, res: Response) => {
   res.send(JSON.stringify({data:tasks, error:null}));
 });
 
-app.post('/comments/create', async (req: Request, res: Response) => {
+app.post('/api/comments/create', async (req: Request, res: Response) => {
   const query = 'INSERT INTO comments (task_id, author_id, create_time, content) VALUES ($1, $2, $3::timestamp, $4) RETURNING id';
   const result = await db.query(query, [
     req.body.taskId,
@@ -175,7 +183,7 @@ app.post('/comments/create', async (req: Request, res: Response) => {
   res.send(JSON.stringify({data:{id:result.rows[0].id, authorId:(req as any).user.id, ...req.body}, error:null}));
 });
 
-app.get('/comments', async (_: Request, res: Response) => {
+app.get('/api/comments', async (_: Request, res: Response) => {
   const query = 'SELECT * FROM comments';
   const result = await db.query(query);
   const comments = result.rows.map((value: any) => new Comment(
@@ -188,19 +196,19 @@ app.get('/comments', async (_: Request, res: Response) => {
   res.send(JSON.stringify({data:comments, error:null}));
 });
 
-app.post('/projects/create', async (req: Request, res: Response) => {
+app.post('/api/projects/create', async (req: Request, res: Response) => {
   const query = 'INSERT INTO projects (title) VALUES ($1) RETURNING id';
   const result = await db.query(query, [req.body.title]);
   res.send(JSON.stringify({data:{id:result.rows[0].id, ...req.body}, error:null}));
 });
 
-app.post('/projects/:id/adduser', async (req: Request, res: Response) => {
+app.post('/api/projects/:id/adduser', async (req: Request, res: Response) => {
   const query = 'INSERT INTO project_users (project_id, user_id) VALUES ($1, $2)';
   await db.query(query, [req.params.id, req.body.userId]);
   res.send(JSON.stringify({data:null, error:null}));
 });
 
-app.get('/projects', async (_: Request, res: Response) => {
+app.get('/api/projects', async (_: Request, res: Response) => {
   const query = 'SELECT * FROM projects';
   const result = await db.query(query);
   const projects = result.rows.map((value: any) => new Project(
