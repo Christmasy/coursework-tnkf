@@ -115,14 +115,10 @@ app.get('/api/tasks/:id', async (req: Request, res: Response) => {
   res.send(JSON.stringify({data:result.rows[0], error:null}));
 });
 
-app.get('/api/tasks', async (_: Request, res: Response) => {
+app.get('/api/tasks', async (req: Request, res: Response) => {
   // только проекты, в которых уч-ет пользователь
-  // const query = 'SELECT * FROM tasks JOIN project_users USING (project_id) WHERE project_users.user_id=$1';
-  // const result = await dbClient.query(query, [(req as any).user.id]);
-
-  // пока что все таски
-  const query = 'SELECT * FROM tasks';
-  const result = await db.query(query);
+  const query = 'SELECT * FROM tasks JOIN project_users USING (project_id) WHERE project_users.user_id=$1';
+  const result = await db.query(query, [(req as any).user.id]);
   const tasks = await Promise.all(result.rows.map(async (value: any) =>
   {
     const queryUser = 'SELECT username FROM users WHERE id=$1';
@@ -146,7 +142,6 @@ app.get('/api/tasks', async (_: Request, res: Response) => {
 
 app.get('/api/projects/:id', async (req: Request, res: Response) => {
   // только таски этого проекта
-  console.log('aaaa');
   const query = 'SELECT * FROM tasks WHERE project_id=$1';
   const result = await db.query(query, [req.params.id]);
   const tasks = await Promise.all(result.rows.map(async (value: any) =>
@@ -167,7 +162,6 @@ app.get('/api/projects/:id', async (req: Request, res: Response) => {
       resultAsignee.rows[0].username
     );
   }));
-  console.log(tasks);
   res.send(JSON.stringify({data:tasks, error:null}));
 });
 

@@ -47,7 +47,6 @@ function CreateTaskWindow() {
       const usersResult = await fetch(REACT_APP_API_URL + '/users', {headers: {'Authorization': `Bearer ${state}`}});
       const users = await usersResult.json();
       const projectsResult = await fetch(REACT_APP_API_URL + '/projects', {headers: {'Authorization': `Bearer ${state}`}});
-      console.log(projectsResult);
       const projects = await projectsResult.json();
       setUsers(users.data);
       setProjects(projects.data);
