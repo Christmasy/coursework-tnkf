@@ -6,7 +6,7 @@ import { NavigateFunction, useNavigate } from 'react-router-dom';
 import { REACT_APP_API_URL } from '../../utils/url';
 
 async function createProject(token: string, title: string, members: number[], navigate: NavigateFunction) {
-  const result = await fetch(REACT_APP_API_URL + '/projects/create',{
+  const result = await fetch(REACT_APP_API_URL + 'api/projects/create',{
     method:'POST',
     headers: {'Authorization': `Bearer ${token}`, 'Content-Type':'application/json'},
     body: JSON.stringify({title})
@@ -25,8 +25,6 @@ async function createProject(token: string, title: string, members: number[], na
 }
 
 function CreateProjectWindow() {
-  console.log('aaa');
-  console.log(process.env.API_URL);
   const classes = useStyles();
   const [title, setTitle] = useState('');
   const [member, changeMember] = useState(0);

@@ -18,6 +18,7 @@ function ProjectWindow() {
       if(!state) {
         return;
       }
+      console.log(REACT_APP_API_URL);
       const result = await fetch(REACT_APP_API_URL + `/projects/${projectId}`, {headers: {'Authorization': `Bearer ${state}`}});
       setTasks((await result.json()).data);
     }

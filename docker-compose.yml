@@ -1,0 +1,25 @@
+# Use postgres/example user/password credentials
+version: '3.1'
+
+services:
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: coursework
+      POSTGRES_USER: coursework
+      POSTGRES_DB: coursework
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - 127.0.0.1:5432:5432
+
+  coursework:
+    image: coursework
+    restart: always
+    ports: 
+      - 127.0.0.1:9090:9090
+
+volumes:
+    db_data:

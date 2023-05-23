@@ -8,8 +8,6 @@ export async function login(
   navigate: NavigateFunction,
   setError: (hasError: boolean) => void
 ){
-  console.log(email);
-  console.log(password);
   const result = await fetch(REACT_APP_API_URL + '/login', { method:'POST', body:JSON.stringify({username:email, password}), headers:{'Content-Type':'application/json'}});
   if(result.status === 401) {
     setError(true);
@@ -17,6 +15,5 @@ export async function login(
   }
   const token = (await result.json()).data;
   setState(token);
-  console.log('navigate');
   navigate('/tasks');
 }

@@ -29,7 +29,7 @@ app.use('/static', express.static('./build/static'));
 
 export default app;
 
-app.get('*', async (_: Request, res: Response) => {
+app.get(/^(?!\/api).*$/, async (_: Request, res: Response) => {
   res.sendFile('./build/index.html', {root: './'});
 });
 
@@ -40,9 +40,6 @@ app.post('/api/reg', async (req: Request, res: Response) => {
 
 app.post('/api/login', async (req: Request, res: Response) => {
   const result = await db.query('SELECT * FROM users WHERE username=$1 AND password=$2', [req.body.username, req.body.password]);
-  console.log(req.body.username);
-  console.log(req.body.password);
-  console.log(result.rowCount);
   if(result.rowCount === 0) {
     res.status(401);
     res.send(JSON.stringify({data: null, error:'username or password invalid'}));
@@ -149,6 +146,7 @@ app.get('/api/tasks', async (_: Request, res: Response) => {
 
 app.get('/api/projects/:id', async (req: Request, res: Response) => {
   // только таски этого проекта
+  console.log('aaaa');
   const query = 'SELECT * FROM tasks WHERE project_id=$1';
   const result = await db.query(query, [req.params.id]);
   const tasks = await Promise.all(result.rows.map(async (value: any) =>
@@ -169,6 +167,7 @@ app.get('/api/projects/:id', async (req: Request, res: Response) => {
       resultAsignee.rows[0].username
     );
   }));
+  console.log(tasks);
   res.send(JSON.stringify({data:tasks, error:null}));
 });
 
