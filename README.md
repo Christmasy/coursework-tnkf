@@ -10,8 +10,8 @@ http://188.120.234.25:9090/
 Логин: eczampl
 Пароль: aR123456q
 
-Почта: eczampl@yandex.ru
-Логин: eczampl
+Почта: eczampl2@yandex.ru
+Логин: eczampl2
 Пароль: aR123456q
 
 ## Описание проекта
